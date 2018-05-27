@@ -1,3 +1,6 @@
+require "active_support"
+require "active_support/concern"
+
 require 'open_api_annotator/version'
 require 'open_api_annotator/errors'
 require 'open_api_annotator/controller_annotatable'
