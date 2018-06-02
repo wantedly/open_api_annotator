@@ -1,6 +1,8 @@
 require "active_support"
 require "active_support/concern"
 
+require 'open_api'
+
 require 'open_api_annotator/field'
 require 'open_api_annotator/attribute'
 require 'open_api_annotator/association'
