@@ -56,7 +56,15 @@ module OpenApiAnnotator
     def fetch_all_serializers
       require_all_serializers!
 
-      ApplicationSerializer.descendants
+      base_serializer.descendants
+    end
+
+    def base_serializer
+      if defined?(ApplicationSerializer)
+        ApplicationSerializer
+      else
+        raise "Expected to have ApplicationSerializer, but not found."
+      end
     end
 
     def require_all_serializers!
