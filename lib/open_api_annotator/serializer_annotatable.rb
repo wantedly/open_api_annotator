@@ -2,25 +2,6 @@ module OpenApiAnnotator
   module SerializerAnnotatable
     extend ActiveSupport::Concern
 
-    class OpenApiField < Struct.new(:name, :type, :nullable)
-      def valid?
-        return false if name.nil?
-        return false if type.nil?
-        return false if nullable.nil?
-
-        true
-      end
-    end
-    class OpenApiAssociation < OpenApiField; end
-    class OpenApiAttribute < OpenApiField
-      attr_accessor :format
-
-      def initialize(name, type, format, nullable)
-        super(name, type, nullable)
-        self.format = format
-      end
-    end
-
     module ClassMethods
       def skip_open_api_validation!
         @open_api_validation_skipped = true
@@ -77,7 +58,7 @@ module OpenApiAnnotator
         }.map do |reflection|
           serializer_class = reflection.options[:serializer]
           type = serializer_class ? [serializer_class.open_api_resource_name] : reflection.options[:type]
-          OpenApiAssociation.new(reflection.name.to_sym, type, reflection.options[:nullable])
+          Association.new(reflection.name.to_sym, type, reflection.options[:nullable])
         end
       end
 
@@ -87,7 +68,7 @@ module OpenApiAnnotator
         }.map do |reflection|
           serializer_class = reflection.options[:serializer]
           type = serializer_class ? [serializer_class.open_api_resource_name] : reflection.options[:type]
-          OpenApiAssociation.new(reflection.name.to_sym, type, reflection.options[:nullable])
+          Association.new(reflection.name.to_sym, type, reflection.options[:nullable])
         end
       end
 
@@ -97,7 +78,7 @@ module OpenApiAnnotator
         }.map do |reflection|
           serializer_class = reflection.options[:serializer]
           type = serializer_class ? [serializer_class.open_api_resource_name] : reflection.options[:type]
-          OpenApiAssociation.new(reflection.name.to_sym, type, reflection.options[:nullable])
+          Association.new(reflection.name.to_sym, type, reflection.options[:nullable])
         end
       end
 
@@ -107,7 +88,7 @@ module OpenApiAnnotator
         }.map { |attribute|
           serializer_class = attribute.options[:serializer]
           type = serializer_class ? [serializer_class.open_api_resource_name] : attribute.options[:type]
-          OpenApiAttribute.new(attribute.name.to_sym, type, attribute.options[:format], attribute.options[:nullable])
+          Attribute.new(attribute.name.to_sym, type, attribute.options[:format], attribute.options[:nullable])
         }
       end
 
