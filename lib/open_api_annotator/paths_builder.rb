@@ -3,7 +3,9 @@ module OpenApiAnnotator
     def build
       paths = OpenApi::Paths.new
       routes = RoutesFinder.new.find_all
-      routes.select! { |route| route.path } # TODO: Enable to filter path
+      if OpenApiAnnotator.config.path_regexp
+        routes.select! { |route| route.path.match(OpenApiAnnotator.config.path_regexp) }
+      end
       routes.group_by(&:path).each do |path_name, routes|
         paths[path_name] = build_path_item(routes)
         puts "Path '#{path_name}' has been created."
@@ -72,8 +74,7 @@ module OpenApiAnnotator
       rescue NameError => e
         return
       end
-      # TODO: Enable to filter controller
-      # return unless controller_class < BaseController
+      return unless controller_class < OpenApiAnnotator.config.application_controller_class
 
       controller_class.type_hash[action_name.to_sym]
     end

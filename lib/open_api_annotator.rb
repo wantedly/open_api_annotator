@@ -21,9 +21,64 @@ require 'open_api_annotator/components_builder'
 require 'open_api_annotator/spec_builder'
 
 module OpenApiAnnotator
-  def self.create_spec_yaml(info:, file_path:)
+  def self.create_spec_yaml
+    info = config.info
     spec = SpecBuilder.new.build(info: info)
     yaml = OpenApi::Serializers::YamlSerializer.new.serialize(spec)
-    File.write(file_path, yaml)
+    File.write(config.destination_path, yaml)
+  end
+
+  def self.configure(&block)
+    block.call(config)
+  end
+
+  def self.config
+    @config ||= Config.new
+  end
+
+  class Config < Struct.new(
+    :info,
+    :destination_path,
+    :path_regexp,
+    :application_controller_class,
+    :application_serializer_class,
+  )
+    def application_serializer_class
+      if super
+        super
+      else
+        unless defined?(ApplicationSerializer)
+          raise <<~EOL
+            Expected to define ApplicationSerializer or set custom class like:
+
+            ```
+            OpenApiAnnotator.configure do |config|
+              config.application_serializer_class = BaseSerializer
+            end
+            ```
+          EOL
+        end
+        ApplicationSerializer
+      end
+    end
+
+    def application_controller_class
+      if super
+        super
+      else
+        unless defined?(ApplicationController)
+          raise <<~EOL
+            Expected to define ApplicationController or set custom class like:
+
+            ```
+            OpenApiAnnotator.configure do |config|
+              config.application_controller_class = BaseSerializer
+            end
+            ```
+          EOL
+        end
+        ApplicationController
+      end
+    end
   end
 end
