@@ -81,4 +81,10 @@ module OpenApiAnnotator
       end
     end
   end
+
+  class Railtie < ::Rails::Railtie
+    rake_tasks do
+      load "tasks/api_spec.rake"
+    end
+  end
 end
