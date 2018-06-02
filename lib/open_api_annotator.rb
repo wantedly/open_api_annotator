@@ -2,6 +2,8 @@ require "active_support"
 require "active_support/concern"
 require "active_support/core_ext/class/subclasses"
 
+require 'rails'
+
 require 'open_api'
 
 require 'open_api_annotator/field'
