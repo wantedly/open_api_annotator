@@ -18,39 +18,50 @@ module OpenApiAnnotator
 
     def build_schema(serializer)
       schema = OpenApi::Schema.new(type: "object", properties: {})
+      schema.properties.merge!(build_attribute_properties(serializer))
+      schema.properties.merge!(build_has_many_association_properties(serializer))
+      schema.properties.merge!(build_has_one_and_belongs_to_association_properties(serializer))
+      schema
+    end
 
-      # attributes
-      serializer.open_api_attributes.map do |attribute|
+    def build_attribute_properties(serializer)
+      properties = {}
+      serializer.open_api_attributes.each do |attribute|
         next unless attribute.valid?
-        schema.properties[attribute.name.to_sym] = OpenApi::Schema.new(
+        properties[attribute.name.to_sym] = OpenApi::Schema.new(
           type: attribute.type,
           format: attribute.format,
           nullable: attribute.nullable,
         )
       end
+      properties
+    end
 
-      # has-many associations
+    def build_has_many_association_properties(serializer)
+      properties = {}
       serializer.open_api_has_many_associations.each do |association|
         next unless association.valid?
         content = association.type.first
         return unless content
         content_name = content.try(:name) || content.to_s
-        schema.properties[association.name.to_sym] = OpenApi::Schema.new(
+        properties[association.name.to_sym] = OpenApi::Schema.new(
           type: "array",
           items: OpenApi::Reference.new(ref: "#/components/schemas/#{content_name}"),
           nullable: association.nullable,
         )
       end
+      properties
+    end
 
-      # has-one and blongs-to associations
+    def build_has_one_and_belongs_to_association_properties(serializer)
+      properties = {}
       associations = serializer.open_api_has_one_associations + serializer.open_api_belongs_to_associations
       associations.each do |association|
         next unless association.valid?
         content_name = association.type.try(:name) || association.type.to_s
-        schema.properties[association.name.to_sym] = OpenApi::Reference.new(ref: "#/components/schemas/#{content_name}")
+        properties[association.name.to_sym] = OpenApi::Reference.new(ref: "#/components/schemas/#{content_name}")
       end
-
-      schema
+      properties
     end
 
     def fetch_all_serializers
