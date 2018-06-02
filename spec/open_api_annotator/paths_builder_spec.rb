@@ -41,8 +41,13 @@ RSpec.describe OpenApiAnnotator::PathsBuilder do
     subject { described_class.new.send(:build_path_item, routes) }
 
     before do
-      stub_const("Api::V1::BooksController", Class.new(ActionController::Base))
+      stub_const("Api::BaseController", Class.new(ActionController::Base))
+      stub_const("Api::V1::BooksController", Class.new(Api::BaseController))
       stub_const("Book", Class.new)
+
+      config = double(:config)
+      allow(config).to receive(:application_controller_class).and_return(Api::BaseController)
+      allow(OpenApiAnnotator).to receive(:config).and_return(config)
 
       allow(Api::V1::BooksController).to receive(:type_hash).and_return(
         {
