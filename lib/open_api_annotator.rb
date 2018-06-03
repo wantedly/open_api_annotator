@@ -6,6 +6,7 @@ require 'rails'
 
 require 'open_api'
 
+require 'open_api_annotator/endpoint'
 require 'open_api_annotator/field'
 require 'open_api_annotator/attribute'
 require 'open_api_annotator/association'

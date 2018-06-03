@@ -77,7 +77,7 @@ module OpenApiAnnotator
       end
       return unless controller_class < OpenApiAnnotator.config.application_controller_class
 
-      controller_class.type_hash[action_name.to_sym]
+      controller_class.endpoint_hash[action_name.to_sym]&.type
     end
   end
 

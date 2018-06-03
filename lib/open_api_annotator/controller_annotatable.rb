@@ -11,7 +11,7 @@ module OpenApiAnnotator
 
     def endpoint(type)
       validate_open_api_type!(type)
-      @last_type = type
+      @last_endpoint = Endpoint.new(type)
 
     rescue ValidationError => e
       raise TypeError, <<~EOL
@@ -32,14 +32,14 @@ module OpenApiAnnotator
 
     def method_added(name)
       super
-      return unless @last_type
+      return unless @last_endpoint
 
-      type = @last_type
-      @last_type = nil
+      endpoint = @last_endpoint
+      @last_endpoint = nil
 
       return if private_method_defined?(name)
 
-      endpoint_hash[name] = type
+      endpoint_hash[name] = endpoint
     end
   end
 end

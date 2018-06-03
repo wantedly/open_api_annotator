@@ -49,11 +49,11 @@ RSpec.describe OpenApiAnnotator::PathsBuilder do
       allow(config).to receive(:application_controller_class).and_return(Api::BaseController)
       allow(OpenApiAnnotator).to receive(:config).and_return(config)
 
-      allow(Api::V1::BooksController).to receive(:type_hash).and_return(
+      allow(Api::V1::BooksController).to receive(:endpoint_hash).and_return(
         {
-          index: [Book],
-          show: Book,
-          update: Book,
+          index: OpenApiAnnotator::Endpoint.new([Book]),
+          show: OpenApiAnnotator::Endpoint.new(Book),
+          update: OpenApiAnnotator::Endpoint.new(Book),
         }
       )
     end

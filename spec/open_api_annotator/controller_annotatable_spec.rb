@@ -24,7 +24,12 @@ RSpec.describe OpenApiAnnotator::ControllerAnnotatable do
 
     it "sets endpoint_hash" do
       subject
-      expect(BooksController.endpoint_hash).to match({ show: Book, index: [Book] })
+      expect(BooksController.endpoint_hash).to match(
+        {
+          show: OpenApiAnnotator::Endpoint.new(Book),
+          index: OpenApiAnnotator::Endpoint.new([Book]),
+        }
+      )
     end
   end
 end
