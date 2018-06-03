@@ -1,7 +1,7 @@
 module OpenApiAnnotator
   module ControllerAnnotatable
-    def type_hash
-      @type_hash ||= {}
+    def endpoint_hash
+      @endpoint_hash ||= {}
     end
 
     def validate_open_api_type!(type)
@@ -39,7 +39,7 @@ module OpenApiAnnotator
 
       return if private_method_defined?(name)
 
-      type_hash[name] = type
+      endpoint_hash[name] = type
     end
   end
 end
