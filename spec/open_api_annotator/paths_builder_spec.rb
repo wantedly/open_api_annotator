@@ -81,7 +81,7 @@ RSpec.describe OpenApiAnnotator::PathsBuilder do
           "GET": OpenApi::Operation.new(
             responses: OpenApi::Responses.new(
               "200": OpenApi::Response.new(
-                description: "Returns Book",
+                description: "Returns a Book",
                 content: {
                   "application/json" => OpenApi::MediaType.new(
                     schema: OpenApi::Reference.new(ref: "#/components/schemas/Book"),
@@ -93,7 +93,7 @@ RSpec.describe OpenApiAnnotator::PathsBuilder do
           "PATCH": OpenApi::Operation.new(
             responses: OpenApi::Responses.new(
               "200": OpenApi::Response.new(
-                description: "Returns Book",
+                description: "Returns a Book",
                 content: {
                   "application/json" => OpenApi::MediaType.new(
                     schema: OpenApi::Reference.new(ref: "#/components/schemas/Book"),
@@ -123,7 +123,7 @@ RSpec.describe OpenApiAnnotator::PathsBuilder do
           get: OpenApi::Operation.new(
             responses: OpenApi::Responses.new(
               "200": OpenApi::Response.new(
-                description: "Returns array of Book",
+                description: "Returns an array of Book",
                 content: {
                   "application/json" => OpenApi::MediaType.new(
                     schema: OpenApi::Schema.new(
