@@ -42,9 +42,9 @@ module OpenApiAnnotator
 
       case type
       when Array
-        "Returns array of #{type.first.name}"
+        "Returns an array of #{type.first.name}"
       when Class
-        "Returns #{type.name}"
+        "Returns a #{type.name}"
       else
         raise "not supported class #{type.class}"
       end
