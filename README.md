@@ -1,8 +1,7 @@
 # OpenApiAnnotator [![Build Status](https://travis-ci.org/ngtk/open_api_annotator.svg?branch=master)](https://travis-ci.org/ngtk/open_api_annotator) [![Maintainability](https://api.codeclimate.com/v1/badges/8be7a273496459c62190/maintainability)](https://codeclimate.com/github/ngtk/open_api_annotator/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/8be7a273496459c62190/test_coverage)](https://codeclimate.com/github/ngtk/open_api_annotator/test_coverage)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/open_api_annotator`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+OpenApiAnnotator realizes to generate OpenApi spec by annotating to controllers and serializers.
+If you use ActiveModelSerializer, this is the best to generate OpenAPI spec.
 
 ## Installation
 
@@ -12,18 +11,67 @@ Add this line to your application's Gemfile:
 gem 'open_api_annotator'
 ```
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install open_api_annotator
-
 ## Usage
 
-TODO: Write usage instructions here
+Annotating controllers and serializers, you can generate OpenAPI spec file from these.
+Things you have to do are three below:
 
+1. Configure API meta information
+1. Annotate controllers
+1. Annotate serializers
+
+### 1. Configure API meta information
+You have to set API meta information like:
+
+```rb
+# config/initializers/open_api_annotator.rb
+OpenApiAnnotator.configure do |config|
+  config.info = OpenApi::Info.new(title: "Book API", version: "1")
+  config.destination_path = Rails.root.join("api_spec.yml")
+  config.path_regexp = /\Aapi\/v1\// # If you want to restrict a path to create
+end
+```
+
+
+### 2. Annotate controller
+To define an entity of an endpoint, call the method `endpoint` in the previous line of an action method. It takes entity expression as the first arg. Entity expression is a model class or an array that contains only one model class.
+
+```rb
+class Api::V1::BooksController
+  endpoint [Book] # 👈It means an array of Book
+  def index
+    books = Book.limit(10)
+    render json: books
+  end
+
+  endpoint Book # 👈Just a Book
+  def show
+    book = Book.find(params[:id])
+    render json: book
+  end
+
+  endpoint Book # 👈Just a Book
+  def update
+     book = Book.find(params[:id])
+     book.update!(book_params)
+     render json: book
+  end
+end
+```
+
+### 3. Annotate serializer
+To define an schema in components, set `type`, `format`, `nullable` as each field option.
+
+```rb
+class BookSerializer < ApplicationSerializer
+  attribute :title, type: :string, nullable: false
+  attribute :published_at, type: :string, format: :"date-time", nullable: true
+
+  has_many :authors, type: [Author], nullable: false
+  has_one :cover_image, type: CoverImage, nullable: true
+  belongs_to :publisher, type: Publisher, nullable: false
+end
+```
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
