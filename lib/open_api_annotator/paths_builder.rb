@@ -3,8 +3,9 @@ module OpenApiAnnotator
     def build
       paths = OpenApi::Paths.new
       routes = RoutesFinder.new.find_all
-      if OpenApiAnnotator.config.path_regexp
-        routes.select! { |route| route.path.match(OpenApiAnnotator.config.path_regexp) }
+      path_regexp = OpenApiAnnotator.config.path_regexp
+      if path_regexp
+        routes.select! { |route| route.path.match(path_regexp) }
       end
       routes.group_by(&:path).each do |path_name, routes|
         paths[path_name] = build_path_item(routes)
