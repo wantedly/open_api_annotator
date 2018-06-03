@@ -40,12 +40,12 @@ module OpenApiAnnotator
     :info,
     :destination_path,
     :path_regexp,
-    :application_controller_class,
-    :application_serializer_class,
+    :application_controller_class_name,
+    :application_serializer_class_name,
   )
     def application_serializer_class
-      if super
-        super
+      if application_serializer_class_name
+        application_serializer_class_name.constantize
       else
         unless defined?(ApplicationSerializer)
           raise <<~EOL
@@ -63,8 +63,8 @@ module OpenApiAnnotator
     end
 
     def application_controller_class
-      if super
-        super
+      if application_controller_class_name
+        application_controller_class_name.constantize
       else
         unless defined?(ApplicationController)
           raise <<~EOL
