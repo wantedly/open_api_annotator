@@ -9,8 +9,8 @@ RSpec.describe OpenApiAnnotator do
         config.info = OpenApi::Info.new(title: "Book API", version: "1")
         config.destination_path = "path/to/spec.yml"
         config.path_regexp = /\Aapi\/v1\//
-        config.application_controller_class = BaseController
-        config.application_serializer_class = BaseSerializer
+        config.application_controller_class_name = "BaseController"
+        config.application_serializer_class_name = "BaseSerializer"
       end
     end
 
