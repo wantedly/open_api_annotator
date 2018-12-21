@@ -27,7 +27,7 @@ RSpec.describe OpenApiAnnotator::ComponentsBuilder do
       allow(BookSerializer).to receive(:open_api_resource_name).and_return("Book")
     end
 
-    it "returns componets" do
+    it "returns components" do
       is_expected.to eq OpenApi::Components.new(
         schemas: {
           "Book" => OpenApi::Schema.new(
@@ -38,7 +38,10 @@ RSpec.describe OpenApiAnnotator::ComponentsBuilder do
                 type: "array",
                 items: OpenApi::Reference.new(ref: "#/components/schemas/Author"),
               ),
-              cover_image: OpenApi::Reference.new(ref: "#/components/schemas/CoverImage"),
+              cover_image: OpenApi::Schema.new(
+                nullable: true,
+                allOf: [OpenApi::Reference.new(ref: "#/components/schemas/CoverImage"),]
+              ),
               publisher: OpenApi::Reference.new(ref: "#/components/schemas/Publisher"),
             },
           )

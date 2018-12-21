@@ -67,7 +67,7 @@ module OpenApiAnnotator
           reflection.is_a?(ActiveModel::Serializer::HasOneReflection)
         }.map do |reflection|
           serializer_class = reflection.options[:serializer]
-          type = serializer_class ? [serializer_class.open_api_resource_name] : reflection.options[:type]
+          type = serializer_class ? serializer_class.open_api_resource_name : reflection.options[:type]
           Association.new(reflection.name.to_sym, type, reflection.options[:nullable])
         end
       end
