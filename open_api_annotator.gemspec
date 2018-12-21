@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "open_api", ">= 0.3.3"
+  spec.add_dependency "open_api", ">= 0.3.4"
   spec.add_dependency "active_model_serializers", "~> 0.10.0"
 
   rails_versions = ['>= 4.1', '< 6']
