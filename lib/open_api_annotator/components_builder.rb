@@ -28,11 +28,22 @@ module OpenApiAnnotator
       properties = {}
       serializer.open_api_attributes.each do |attribute|
         next unless attribute.valid?
-        properties[attribute.name.to_sym] = OpenApi::Schema.new(
-          type: attribute.type,
-          format: attribute.format,
-          nullable: attribute.nullable,
-        )
+        properties[attribute.name.to_sym] = if attribute.type.is_a?(Array)
+          OpenApi::Schema.new(
+            type: "array",
+            items: OpenApi::Schema.new(
+              type: attribute.type.first,
+              format: attribute.format,
+              nullable: attribute.nullable,
+            )
+          )
+        else
+          OpenApi::Schema.new(
+            type: attribute.type,
+            format: attribute.format,
+            nullable: attribute.nullable,
+          )
+        end
       end
       properties
     end
