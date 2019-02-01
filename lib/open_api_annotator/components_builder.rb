@@ -59,7 +59,15 @@ module OpenApiAnnotator
       associations.each do |association|
         next unless association.valid?
         content_name = association.type.try(:name) || association.type.to_s
-        properties[association.name.to_sym] = OpenApi::Reference.new(ref: "#/components/schemas/#{content_name}")
+        reference = OpenApi::Reference.new(ref: "#/components/schemas/#{content_name}")
+        properties[association.name.to_sym] = if association.nullable
+          OpenApi::Schema.new(
+            nullable: true,
+            allOf: [reference]
+          )
+        else
+          reference
+        end
       end
       properties
     end
