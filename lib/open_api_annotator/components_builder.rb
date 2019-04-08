@@ -21,6 +21,9 @@ module OpenApiAnnotator
       schema.properties.merge!(build_attribute_properties(serializer))
       schema.properties.merge!(build_has_many_association_properties(serializer))
       schema.properties.merge!(build_has_one_and_belongs_to_association_properties(serializer))
+      if schema.properties.has_key?(:id)
+        schema.required = [:id]
+      end
       schema
     end
 

@@ -12,6 +12,7 @@ RSpec.describe OpenApiAnnotator::ComponentsBuilder do
     let(:belongs_to_association) { OpenApiAnnotator::Association.new("publisher", Publisher, false) }
     let(:attribute) { OpenApiAnnotator::Attribute.new("published_at", "string", "date-time", false) }
     let(:array_attribute) { OpenApiAnnotator::Attribute.new("tags", ["string"], nil, false) }
+    let(:id_attribute) { OpenApiAnnotator::Attribute.new("id", "number", nil, false) }
 
     before do
       stub_const("BookSerializer", Class.new(ActiveModel::Serializer))
@@ -24,7 +25,7 @@ RSpec.describe OpenApiAnnotator::ComponentsBuilder do
       allow(BookSerializer).to receive(:open_api_has_many_associations).and_return([has_many_association])
       allow(BookSerializer).to receive(:open_api_has_one_associations).and_return([has_one_association])
       allow(BookSerializer).to receive(:open_api_belongs_to_associations).and_return([belongs_to_association])
-      allow(BookSerializer).to receive(:open_api_attributes).and_return([attribute, array_attribute])
+      allow(BookSerializer).to receive(:open_api_attributes).and_return([attribute, array_attribute, id_attribute])
       allow(BookSerializer).to receive(:open_api_resource_name).and_return("Book")
     end
 
@@ -34,6 +35,7 @@ RSpec.describe OpenApiAnnotator::ComponentsBuilder do
           "Book" => OpenApi::Schema.new(
             type: "object",
             properties: {
+              id: OpenApi::Schema.new(type: "number", format: nil),
               published_at: OpenApi::Schema.new(type: "string", format: "date-time"),
               tags: OpenApi::Schema.new(
                 type: "array",
@@ -49,6 +51,7 @@ RSpec.describe OpenApiAnnotator::ComponentsBuilder do
               ),
               publisher: OpenApi::Reference.new(ref: "#/components/schemas/Publisher"),
             },
+            required: [:id]
           )
         }
       )
