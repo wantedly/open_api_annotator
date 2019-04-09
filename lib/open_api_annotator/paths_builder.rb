@@ -23,14 +23,26 @@ module OpenApiAnnotator
         media_type = resolve_media_type(route.controller_name, route.action_name)
         description = build_description(route.controller_name, route.action_name)
         next unless media_type
+        operation = OpenApi::Operation.new(responses: OpenApi::Responses.new)
         response = OpenApi::Response.new(
           description: description,
           content: {
             "application/json" => media_type,
           }
         )
-        operation = OpenApi::Operation.new(responses: OpenApi::Responses.new)
         operation.responses["200"] = response
+        route.parameters.each do |parameter|
+          parameter = OpenApi::Parameter.new(
+            name: parameter[:name],
+            in: :path,
+            required: true,
+            schema: OpenApi::Schema.new(
+              type: :string
+            )
+          )
+          operation.parameters = [] unless operation.parameters
+          operation.parameters.push(parameter)
+        end
         path_item.operations[route.http_verb.underscore] = operation
       end
       path_item
@@ -81,38 +93,43 @@ module OpenApiAnnotator
     end
   end
 
-  Route = Struct.new(:http_verb, :path, :controller_name, :action_name) do
-    def initialize(http_verb:, path:, controller_name:, action_name:)
+  Route = Struct.new(:http_verb, :path, :controller_name, :action_name, :parameters) do
+    def initialize(http_verb:, path:, controller_name:, action_name:, parameters: [])
       self.http_verb = http_verb
       self.path = path
       self.controller_name = controller_name
       self.action_name = action_name
+      self.parameters = parameters
     end
   end
 
   class RoutesFinder
     def find_all
       @routes ||= Rails.application.routes.routes.routes.map do |route|
-        path = PathResolver.new.resolve(route.path.ast)
+        parameters = []
+        path = PathResolver.new.resolve(route.path.ast, parameters)
         controller = route.requirements[:controller]
         action = route.requirements[:action]
-        Route.new(http_verb: route.verb, path: path, controller_name: controller, action_name: action)
+        Route.new(http_verb: route.verb, path: path, controller_name: controller, action_name: action, parameters: parameters)
       end
     end
   end
 
   class PathResolver
-    def resolve(ast)
+    def resolve(ast, parameters_context = [])
       res = ""
       if ast.type == :CAT
         left = ast.left
         res +=
           if left.type == :SYMBOL
+            parameters_context.push({
+              name: left.name,
+            })
             "{#{left.name}}"
           else
             left.to_s
           end
-        res += resolve(ast.right)
+        res += resolve(ast.right, parameters_context)
       end
       res
     end
