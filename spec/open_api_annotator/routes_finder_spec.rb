@@ -40,7 +40,7 @@ end
 
 RSpec.describe OpenApiAnnotator::PathResolver do
   describe "#resolve" do
-    subject { described_class.new.resolve(ast) }
+    subject { described_class.new.resolve(ast, parameters_context) }
 
     let(:ast) do
       ActionDispatch::Journey::Nodes::Cat.new(
@@ -71,9 +71,11 @@ RSpec.describe OpenApiAnnotator::PathResolver do
         )
       )
     end
+    let(:parameters_context) { [ ] }
 
     it "returns path string" do
       is_expected.to eq "/api/v1/books/{id}"
+      expect(parameters_context).to eq [{name: "id"}]
     end
   end
 end
