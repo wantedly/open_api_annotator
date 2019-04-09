@@ -116,20 +116,20 @@ module OpenApiAnnotator
   end
 
   class PathResolver
-    def resolve(ast, parameters = [])
+    def resolve(ast, parameters_context = [])
       res = ""
       if ast.type == :CAT
         left = ast.left
         res +=
           if left.type == :SYMBOL
-            parameters.push({
+            parameters_context.push({
               name: left.name,
             })
             "{#{left.name}}"
           else
             left.to_s
           end
-        res += resolve(ast.right, parameters)
+        res += resolve(ast.right, parameters_context)
       end
       res
     end
