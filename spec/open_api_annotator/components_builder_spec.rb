@@ -51,10 +51,43 @@ RSpec.describe OpenApiAnnotator::ComponentsBuilder do
               ),
               publisher: OpenApi::Reference.new(ref: "#/components/schemas/Publisher"),
             },
-            required: [:id]
           )
         }
       )
+    end
+
+    context "when always_required_fields option is supplied" do
+      before do
+        allow(OpenApiAnnotator.config).to receive(:always_required_fields).and_return [:id]
+      end
+
+      it "returns components" do
+        is_expected.to eq OpenApi::Components.new(
+          schemas: {
+            "Book" => OpenApi::Schema.new(
+              type: "object",
+              properties: {
+                id: OpenApi::Schema.new(type: "number", format: nil),
+                published_at: OpenApi::Schema.new(type: "string", format: "date-time"),
+                tags: OpenApi::Schema.new(
+                  type: "array",
+                  items: OpenApi::Schema.new(type: "string", format: nil)
+                ),
+                authors: OpenApi::Schema.new(
+                  type: "array",
+                  items: OpenApi::Reference.new(ref: "#/components/schemas/Author"),
+                ),
+                cover_image: OpenApi::Schema.new(
+                  nullable: true,
+                  allOf: [OpenApi::Reference.new(ref: "#/components/schemas/CoverImage"),]
+                ),
+                publisher: OpenApi::Reference.new(ref: "#/components/schemas/Publisher"),
+              },
+              required: [:id]
+            )
+          }
+        )
+      end
     end
   end
 
