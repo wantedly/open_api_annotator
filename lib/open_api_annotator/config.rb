@@ -5,6 +5,7 @@ module OpenApiAnnotator
     :path_regexp,
     :application_controller_class_name,
     :application_serializer_class_name,
+    :always_required_fields,
   )
     def application_serializer_class
       if application_serializer_class_name
@@ -50,6 +51,7 @@ module OpenApiAnnotator
       validate_path_regexp!
       validate_application_controller_class_name!
       validate_application_serializer_class_name!
+      validate_always_required_fields!
     end
 
     def validate_info!
@@ -92,6 +94,10 @@ module OpenApiAnnotator
     end
 
     def validate_application_controller_class_name!
+      # Do nothing
+    end
+
+    def validate_always_required_fields!
       # Do nothing
     end
 

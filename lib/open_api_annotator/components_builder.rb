@@ -21,6 +21,10 @@ module OpenApiAnnotator
       schema.properties.merge!(build_attribute_properties(serializer))
       schema.properties.merge!(build_has_many_association_properties(serializer))
       schema.properties.merge!(build_has_one_and_belongs_to_association_properties(serializer))
+      required_fields = OpenApiAnnotator.config.always_required_fields
+      if required_fields.present?
+        schema.required = required_fields.select{|field| schema.properties[field] }
+      end
       schema
     end
 
