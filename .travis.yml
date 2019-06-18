@@ -6,7 +6,8 @@ language: ruby
 rvm:
   - 2.4.4
   - 2.5.1
-before_install: gem install bundler -v 1.16.1
+before_install:
+  - gem install -v 1.17.3 bundler --no-rdoc --no-ri
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
