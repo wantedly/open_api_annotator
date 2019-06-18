@@ -54,9 +54,20 @@ module OpenApiAnnotator
 
       case type
       when Array
-        "Returns an array of #{type.first.name}"
+        name = build_type_name(type.first)
+        "Returns an array of #{name}"
+      else
+        name = build_type_name(type)
+        "Returns a #{name}"
+      end
+    end
+
+    def build_type_name(type)
+      case type
+      when Symbol
+        "#{type.to_s}"
       when Class
-        "Returns a #{type.name}"
+        "#{type.name}"
       else
         raise "not supported class #{type.class}"
       end
@@ -68,13 +79,21 @@ module OpenApiAnnotator
 
       case type
       when Array
-        content_class = type.first
-        reference = OpenApi::Reference.new(ref: "#/components/schemas/#{content_class.name}")
-        schema = OpenApi::Schema.new(type: "array", items: reference)
+        schema_of_array = resolve_media_type_schema(type.first)
+        schema = OpenApi::Schema.new(type: "array", items: schema_of_array)
         OpenApi::MediaType.new(schema: schema)
+      else
+        schema = resolve_media_type_schema(type)
+        OpenApi::MediaType.new(schema: schema)
+      end
+    end
+
+    def resolve_media_type_schema(type)
+      case type
+      when Symbol
+        OpenApi::Schema.new(type: type.to_s, format: nil)
       when Class
-        reference = OpenApi::Reference.new(ref: "#/components/schemas/#{type.name}")
-        OpenApi::MediaType.new(schema: reference)
+        OpenApi::Reference.new(ref: "#/components/schemas/#{type.name}")
       else
         raise "not supported class #{type.class}"
       end
