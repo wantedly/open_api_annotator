@@ -59,8 +59,8 @@ RSpec.describe OpenApiAnnotator::PathsBuilder do
       )
       allow(Api::V1::StringsController).to receive(:endpoint_hash).and_return(
         {
-          index: OpenApiAnnotator::Endpoint.new([:string]),
-          show: OpenApiAnnotator::Endpoint.new(:string),
+          index: OpenApiAnnotator::Endpoint.new([OpenApi::DataType.new(:string, :string)]),
+          show: OpenApiAnnotator::Endpoint.new(OpenApi::DataType.new(:string, :string)),
         }
       )
     end
@@ -166,7 +166,7 @@ RSpec.describe OpenApiAnnotator::PathsBuilder do
                 description: "Returns a string",
                 content: {
                   "application/json" => OpenApi::MediaType.new(
-                    schema: OpenApi::Schema.new(type: "string", format: nil)
+                    schema: OpenApi::Schema.new(type: :string, format: nil)
                   )
                 }
               )
@@ -198,7 +198,7 @@ RSpec.describe OpenApiAnnotator::PathsBuilder do
                   "application/json" => OpenApi::MediaType.new(
                     schema: OpenApi::Schema.new(
                       type: "array",
-                      items: OpenApi::Schema.new(type: "string", format: nil)
+                      items: OpenApi::Schema.new(type: :string, format: nil)
                     )
                   )
                 }

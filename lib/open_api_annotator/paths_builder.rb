@@ -64,8 +64,8 @@ module OpenApiAnnotator
 
     def build_type_name(type)
       case type
-      when Symbol
-        "#{type.to_s}"
+      when OpenApi::DataType
+        "#{type.name}"
       when Class
         "#{type.name}"
       else
@@ -90,8 +90,8 @@ module OpenApiAnnotator
 
     def resolve_media_type_schema(type)
       case type
-      when Symbol
-        OpenApi::Schema.new(type: type.to_s, format: nil)
+      when OpenApi::DataType
+        OpenApi::Schema.new(type: type.name, format: type.format)
       when Class
         OpenApi::Reference.new(ref: "#/components/schemas/#{type.name}")
       else
