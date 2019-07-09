@@ -63,6 +63,7 @@ module OpenApiAnnotator
     end
 
     def build_type_name(type)
+      type = convert_primitive_class_to_data_type(type)
       case type
       when OpenApi::DataType
         "#{type.name}"
@@ -89,6 +90,7 @@ module OpenApiAnnotator
     end
 
     def resolve_media_type_schema(type)
+      type = convert_primitive_class_to_data_type(type)
       case type
       when OpenApi::DataType
         OpenApi::Schema.new(type: type.name, format: type.format)
@@ -96,6 +98,18 @@ module OpenApiAnnotator
         OpenApi::Reference.new(ref: "#/components/schemas/#{type.name}")
       else
         raise "not supported class #{type.class}"
+      end
+    end
+
+    def convert_primitive_class_to_data_type(type)
+      if type == String
+        OpenApi::DataType.new(:string, :string, :string)
+      elsif type == Integer
+        OpenApi::DataType.new(:integer, :integer, :int32)
+      elsif type == Float
+        OpenApi::DataType.new(:float, :number, :float)
+      else
+        type
       end
     end
 
