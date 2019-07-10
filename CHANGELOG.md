@@ -1,3 +1,8 @@
+## Not released yet
+
+## 0.4.0
+- Enable to annotate primitive types to endpoint #11
+
 ## 0.3.0
 - Add path parameters to parameters #8
 - Enable add always requried fields #9
