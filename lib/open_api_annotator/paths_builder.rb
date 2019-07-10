@@ -54,9 +54,21 @@ module OpenApiAnnotator
 
       case type
       when Array
-        "Returns an array of #{type.first.name}"
+        name = build_type_name(type.first)
+        "Returns an array of #{name}"
+      else
+        name = build_type_name(type)
+        "Returns a #{name}"
+      end
+    end
+
+    def build_type_name(type)
+      type = convert_primitive_class_to_data_type(type)
+      case type
+      when OpenApi::DataType
+        "#{type.name}"
       when Class
-        "Returns a #{type.name}"
+        "#{type.name}"
       else
         raise "not supported class #{type.class}"
       end
@@ -68,15 +80,36 @@ module OpenApiAnnotator
 
       case type
       when Array
-        content_class = type.first
-        reference = OpenApi::Reference.new(ref: "#/components/schemas/#{content_class.name}")
-        schema = OpenApi::Schema.new(type: "array", items: reference)
+        schema_of_array = resolve_media_type_schema(type.first)
+        schema = OpenApi::Schema.new(type: "array", items: schema_of_array)
         OpenApi::MediaType.new(schema: schema)
+      else
+        schema = resolve_media_type_schema(type)
+        OpenApi::MediaType.new(schema: schema)
+      end
+    end
+
+    def resolve_media_type_schema(type)
+      type = convert_primitive_class_to_data_type(type)
+      case type
+      when OpenApi::DataType
+        OpenApi::Schema.new(type: type.name, format: type.format)
       when Class
-        reference = OpenApi::Reference.new(ref: "#/components/schemas/#{type.name}")
-        OpenApi::MediaType.new(schema: reference)
+        OpenApi::Reference.new(ref: "#/components/schemas/#{type.name}")
       else
         raise "not supported class #{type.class}"
+      end
+    end
+
+    def convert_primitive_class_to_data_type(type)
+      if type == String
+        OpenApi::DataType.new(:string, :string, :string)
+      elsif type == Integer
+        OpenApi::DataType.new(:integer, :integer, :int32)
+      elsif type == Float
+        OpenApi::DataType.new(:float, :number, :float)
+      else
+        type
       end
     end
 

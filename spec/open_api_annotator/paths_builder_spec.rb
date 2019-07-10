@@ -43,6 +43,7 @@ RSpec.describe OpenApiAnnotator::PathsBuilder do
     before do
       stub_const("Api::BaseController", Class.new(ActionController::Base))
       stub_const("Api::V1::BooksController", Class.new(Api::BaseController))
+      stub_const("Api::V1::StringsController", Class.new(Api::BaseController))
       stub_const("Book", Class.new)
 
       config = double(:config)
@@ -54,6 +55,12 @@ RSpec.describe OpenApiAnnotator::PathsBuilder do
           index: OpenApiAnnotator::Endpoint.new([Book]),
           show: OpenApiAnnotator::Endpoint.new(Book),
           update: OpenApiAnnotator::Endpoint.new(Book),
+        }
+      )
+      allow(Api::V1::StringsController).to receive(:endpoint_hash).and_return(
+        {
+          index: OpenApiAnnotator::Endpoint.new([String]),
+          show: OpenApiAnnotator::Endpoint.new(String),
         }
       )
     end
@@ -138,5 +145,69 @@ RSpec.describe OpenApiAnnotator::PathsBuilder do
         )
       end
     end
+
+    context "when media type is symbol" do
+      let(:routes) do
+        [
+          OpenApiAnnotator::Route.new(
+            http_verb: "GET",
+            path: "/api/v1/strings/{id}",
+            controller_name: "api/v1/strings",
+            action_name: "show",
+          ),
+        ]
+      end
+
+      it "returns OpenApi::PathItem" do
+        is_expected.to eq OpenApi::PathItem.new(
+          get: OpenApi::Operation.new(
+            responses: OpenApi::Responses.new(
+              "200": OpenApi::Response.new(
+                description: "Returns a string",
+                content: {
+                  "application/json" => OpenApi::MediaType.new(
+                    schema: OpenApi::Schema.new(type: :string, format: :string)
+                  )
+                }
+              )
+            )
+          )
+        )
+      end
+    end
+
+    context "when media type is array of symbol" do
+      let(:routes) do
+        [
+          OpenApiAnnotator::Route.new(
+            http_verb: "GET",
+            path: "/api/v1/strings",
+            controller_name: "api/v1/strings",
+            action_name: "index",
+          ),
+        ]
+      end
+
+      it "returns OpenApi::PathItem" do
+        is_expected.to eq OpenApi::PathItem.new(
+          get: OpenApi::Operation.new(
+            responses: OpenApi::Responses.new(
+              "200": OpenApi::Response.new(
+                description: "Returns an array of string",
+                content: {
+                  "application/json" => OpenApi::MediaType.new(
+                    schema: OpenApi::Schema.new(
+                      type: "array",
+                      items: OpenApi::Schema.new(type: :string, format: :string)
+                    )
+                  )
+                }
+              )
+            )
+          )
+        )
+      end
+    end
+
   end
 end
