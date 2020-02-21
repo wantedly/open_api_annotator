@@ -9,7 +9,7 @@ module OpenApiAnnotator
       end
 
       def config
-        @config ||= Config.new
+        @config ||= Config.new(nil, nil, nil, nil, nil, false)
       end
     end
   end

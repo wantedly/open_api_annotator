@@ -7,6 +7,10 @@ module OpenApiAnnotator
         @open_api_validation_skipped = true
       end
 
+      def use_open_api_validation!
+        @open_api_validation_skipped = false
+      end
+
       def attribute(attr, options = {}, &block)
         validate_open_api_options(attr, options)
         super(attr, options, &block)
@@ -28,7 +32,7 @@ module OpenApiAnnotator
       end
 
       def validate_open_api_options(field, options)
-        return if @open_api_validation_skipped
+        return if skip_open_api_validation?
 
         validate_open_api_type!(options[:type])
         validate_open_api_format!(options[:format])
@@ -94,6 +98,13 @@ module OpenApiAnnotator
 
       def open_api_resource_name
         name.remove(/Serializer\z/)
+      end
+
+      private
+
+      def skip_open_api_validation?
+        return @open_api_validation_skipped unless @open_api_validation_skipped.nil?
+        OpenApiAnnotator.config.default_skip_open_api_validation
       end
     end
   end

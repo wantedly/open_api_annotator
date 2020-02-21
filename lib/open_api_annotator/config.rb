@@ -6,6 +6,7 @@ module OpenApiAnnotator
     :application_controller_class_name,
     :application_serializer_class_name,
     :always_required_fields,
+    :default_skip_open_api_validation,
   )
     def application_serializer_class
       if application_serializer_class_name
