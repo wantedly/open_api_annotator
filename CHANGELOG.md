@@ -1,5 +1,7 @@
 ## Not released yet
 
+- Allow using with rails 6
+
 ## 0.4.0
 - Enable to annotate primitive types to endpoint #11
 
