@@ -21,14 +21,14 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "open_api", ">= 0.4.0"
+  spec.add_dependency "open_api", ">= 0.5.0"
   spec.add_dependency "active_model_serializers", "~> 0.10.0"
 
-  rails_versions = ['>= 4.1', '< 6']
+  rails_versions = ['>= 5.0', '< 6.1']
   spec.add_dependency "actionpack", rails_versions
   spec.add_dependency "railties", rails_versions
 
-  spec.add_development_dependency "bundler", "~> 1.16"
+  spec.add_development_dependency "bundler", "~> 2.1.4"
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "pry"
