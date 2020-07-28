@@ -34,7 +34,7 @@ module OpenApiAnnotator
         validate_open_api_format!(options[:format])
         validate_open_api_nullable!(options[:nullable])
       rescue ValidationError => e
-        Rails.logger.warn(e.message)
+        Rails.logger.warn("Within #{self.name}, #{field}: #{e.message}")
       end
 
       def validate_open_api_type!(type)
