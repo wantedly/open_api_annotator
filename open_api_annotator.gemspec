@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "open_api", ">= 0.5.0"
   spec.add_dependency "active_model_serializers", "~> 0.10.0"
 
-  rails_versions = ['>= 5.0', '< 6.1']
+  rails_versions = ['>= 5.0', '< 6.2']
   spec.add_dependency "actionpack", rails_versions
   spec.add_dependency "railties", rails_versions
 
