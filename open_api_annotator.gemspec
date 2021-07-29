@@ -32,6 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "pry"
-  spec.add_development_dependency "simplecov"
+  # Pin to 1.17 due to https://github.com/codeclimate/test-reporter/issues/413
+  spec.add_development_dependency "simplecov", "~> 0.17.0"
   spec.add_development_dependency "bump"
 end
