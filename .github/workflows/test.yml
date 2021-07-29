@@ -17,7 +17,6 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby }}
         bundler-cache: true
-        bundler: 2.1.4 # TODO: remove it later
     - run: bundle exec rake
     - name: Send coverage
       uses: paambaati/codeclimate-action@v2.7.5
