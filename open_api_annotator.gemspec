@@ -24,14 +24,15 @@ Gem::Specification.new do |spec|
   spec.add_dependency "open_api", ">= 0.5.0"
   spec.add_dependency "active_model_serializers", "~> 0.10.0"
 
-  rails_versions = ['>= 5.0', '< 6.1']
+  rails_versions = ['>= 5.0', '< 6.2']
   spec.add_dependency "actionpack", rails_versions
   spec.add_dependency "railties", rails_versions
 
-  spec.add_development_dependency "bundler", "~> 2.1.4"
-  spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "bundler", "~> 2.0"
+  spec.add_development_dependency "rake", "~> 13.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency "pry"
-  spec.add_development_dependency "simplecov"
+  # Pin to 1.17 due to https://github.com/codeclimate/test-reporter/issues/413
+  spec.add_development_dependency "simplecov", "~> 0.17.0"
   spec.add_development_dependency "bump"
 end
