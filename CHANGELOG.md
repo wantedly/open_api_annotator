@@ -1,5 +1,7 @@
 ## Not released yet
 
+## 0.6.0
+- Support Ruby 3.0 and Rails 6.1
 ## 0.5.0
 - Allow using with rails 6
 
