@@ -1,4 +1,4 @@
-# OpenApiAnnotator [![Gem Version](https://badge.fury.io/rb/open_api_annotator.svg)](https://badge.fury.io/rb/open_api_annotator) [![Build Status](https://travis-ci.org/ngtk/open_api_annotator.svg?branch=master)](https://travis-ci.org/ngtk/open_api_annotator) [![Maintainability](https://api.codeclimate.com/v1/badges/8be7a273496459c62190/maintainability)](https://codeclimate.com/github/ngtk/open_api_annotator/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/8be7a273496459c62190/test_coverage)](https://codeclimate.com/github/ngtk/open_api_annotator/test_coverage)
+# OpenApiAnnotator [![Gem Version](https://badge.fury.io/rb/open_api_annotator.svg)](https://badge.fury.io/rb/open_api_annotator) [![Build Status](https://travis-ci.org/wantedly/open_api_annotator.svg?branch=master)](https://travis-ci.org/wantedly/open_api_annotator) [![Maintainability](https://api.codeclimate.com/v1/badges/8be7a273496459c62190/maintainability)](https://codeclimate.com/github/wantedly/open_api_annotator/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/8be7a273496459c62190/test_coverage)](https://codeclimate.com/github/wantedly/open_api_annotator/test_coverage)
 
 OpenApiAnnotator realizes to generate OpenAPI spec by annotating to controllers and serializers.
 If you use ActiveModelSerializer, this is the best way to generate OpenAPI spec.
@@ -80,7 +80,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/ngtk/open_api_annotator. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/wantedly/open_api_annotator. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
@@ -88,4 +88,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the OpenApiAnnotator project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/ngtk/open_api_annotator/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the OpenApiAnnotator project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/wantedly/open_api_annotator/blob/master/CODE_OF_CONDUCT.md).

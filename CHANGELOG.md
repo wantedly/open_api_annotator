@@ -1,5 +1,7 @@
 ## Not released yet
 
+- Reflect ownership transfer https://github.com/wantedly/open_api_annotator/pull/18
+
 ## 0.6.0
 - Support Ruby 3.0 and Rails 6.1
 ## 0.5.0
