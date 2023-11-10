@@ -1,6 +1,11 @@
 ## Not released yet
 
+## 0.6.1
+
 - Reflect ownership transfer https://github.com/wantedly/open_api_annotator/pull/18
+- Bump Ruby and Rails https://github.com/wantedly/open_api_annotator/pull/19
+  - Supported Rubies: 3.0, 3.1, 3.2
+  - Supported Rails: 6.1, 7.0, 7.1
 
 ## 0.6.0
 - Support Ruby 3.0 and Rails 6.1
