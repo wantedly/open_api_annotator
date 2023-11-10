@@ -6,12 +6,12 @@ require "open_api_annotator/version"
 Gem::Specification.new do |spec|
   spec.name          = "open_api_annotator"
   spec.version       = OpenApiAnnotator::VERSION
-  spec.authors       = ["Kent Nagata"]
-  spec.email         = ["ngtknt@me.com"]
+  spec.authors       = ["Kent Nagata", "Wantedly, Inc."]
+  spec.email         = ["ngtknt@me.com", "dev@wantedly.com"]
 
   spec.summary       = %q{OpenApi spec generation by bottom-up.}
   spec.description   = %q{OpenApiAnnotator realizes to generate OpenApi spec by annotating to Controller and ActiveModelSerializer.}
-  spec.homepage      = "https://github.com/ngtk/open_api_annotator"
+  spec.homepage      = "https://github.com/wantedly/open_api_annotator"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
