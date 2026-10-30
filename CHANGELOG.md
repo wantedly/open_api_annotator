@@ -1,5 +1,13 @@
 ## Not released yet
 
+## 0.6.2
+
+- Fix `rake api_spec` raising `NoMethodError` on Rails 7.0 or later https://github.com/wantedly/open_api_annotator/pull/20
+- Require open_api >= 0.6.3 https://github.com/wantedly/open_api_annotator/pull/20
+- Bump Ruby and Rails https://github.com/wantedly/open_api_annotator/pull/20
+  - Supported Rubies: 3.3, 3.4, 4.0
+  - Supported Rails: 7.0, 7.1, 7.2, 8.0, 8.1
+
 ## 0.6.1
 
 - Reflect ownership transfer https://github.com/wantedly/open_api_annotator/pull/18

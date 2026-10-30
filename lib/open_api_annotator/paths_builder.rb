@@ -140,7 +140,7 @@ module OpenApiAnnotator
     def find_all
       @routes ||= Rails.application.routes.routes.routes.map do |route|
         parameters = []
-        path = PathResolver.new.resolve(route.path.ast, parameters)
+        path = PathResolver.new.resolve(route.path.spec, parameters)
         controller = route.requirements[:controller]
         action = route.requirements[:action]
         Route.new(http_verb: route.verb, path: path, controller_name: controller, action_name: action, parameters: parameters)
