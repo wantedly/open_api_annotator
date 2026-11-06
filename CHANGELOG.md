@@ -3,6 +3,8 @@
 ## 0.6.2
 
 - Fix `rake api_spec` raising `NoMethodError` on Rails 7.0 or later https://github.com/wantedly/open_api_annotator/pull/20
+- Fix `$ref` of `belongs_to` with `serializer:` option being an array like `#/components/schemas/["User"]` https://github.com/wantedly/open_api_annotator/pull/20
+- Skip `has_many` annotated with a non-array type (e.g. `type: User`) or an empty array with a warning, instead of raising an error or emitting a broken `$ref` https://github.com/wantedly/open_api_annotator/pull/20
 - Require open_api >= 0.6.3 https://github.com/wantedly/open_api_annotator/pull/20
 - Bump Ruby and Rails https://github.com/wantedly/open_api_annotator/pull/20
   - Supported Rubies: 3.3, 3.4, 4.0

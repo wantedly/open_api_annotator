@@ -56,8 +56,12 @@ module OpenApiAnnotator
       properties = {}
       serializer.open_api_has_many_associations.each do |association|
         next unless association.valid?
-        content = association.type.first
-        return unless content
+        # Calling `first` on a non-array type (e.g. an ActiveRecord model) would run a query
+        content = association.type.first if association.type.is_a?(Array)
+        unless content
+          warn "Skipped #{serializer.name}##{association.name}: type of has_many should be an array with one element, but got #{association.type}."
+          next
+        end
         content_name = content.try(:name) || content.to_s
         properties[association.name.to_sym] = OpenApi::Schema.new(
           type: "array",
