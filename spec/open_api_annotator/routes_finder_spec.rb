@@ -46,8 +46,6 @@ RSpec.describe OpenApiAnnotator::RoutesFinder do
         route_set.draw do
           get "/api/v1/books/:book_id/authors/:id", to: "api/v1/authors#show"
         end
-        # Rails 7.0+ wraps Pattern#ast in Journey::Ast and clears it on eager_load!, while Pattern#spec survives both
-        route_set.eager_load!
       end
     end
 
@@ -56,18 +54,31 @@ RSpec.describe OpenApiAnnotator::RoutesFinder do
       allow(rails_application).to receive(:routes).and_return(route_set)
     end
 
-    it "resolves path and parameters from the route" do
-      is_expected.to match(
-        [
-          OpenApiAnnotator::Route.new(
-            http_verb: "GET",
-            path: "/api/v1/books/{book_id}/authors/{id}",
-            controller_name: "api/v1/authors",
-            action_name: "show",
-            parameters: [{ name: "book_id" }, { name: "id" }]
-          )
-        ]
-      )
+    # Rails 7.0+ wraps Pattern#ast in Journey::Ast and clears it on eager_load!, while Pattern#spec survives both
+    shared_examples "resolving path and parameters from the route" do
+      it "returns the route with its path and parameters" do
+        is_expected.to match(
+          [
+            OpenApiAnnotator::Route.new(
+              http_verb: "GET",
+              path: "/api/v1/books/{book_id}/authors/{id}",
+              controller_name: "api/v1/authors",
+              action_name: "show",
+              parameters: [{ name: "book_id" }, { name: "id" }]
+            )
+          ]
+        )
+      end
+    end
+
+    context "when routes are not eager loaded (as in rake tasks by default)" do
+      it_behaves_like "resolving path and parameters from the route"
+    end
+
+    context "when routes are eager loaded (e.g. with config.rake_eager_load = true)" do
+      before { route_set.eager_load! }
+
+      it_behaves_like "resolving path and parameters from the route"
     end
   end
 end
