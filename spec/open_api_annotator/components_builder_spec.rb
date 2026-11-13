@@ -89,6 +89,35 @@ RSpec.describe OpenApiAnnotator::ComponentsBuilder do
         )
       end
     end
+
+    context "when has_many associations are annotated with non-array types" do
+      let(:class_has_many_association) { OpenApiAnnotator::Association.new("logs", Log, true) }
+      let(:string_has_many_association) { OpenApiAnnotator::Association.new("notes", "Note", true) }
+
+      before do
+        # Like an ActiveRecord model, `first` would run a query
+        stub_const("Log", Class.new { def self.first; raise "Log.first must not be called"; end })
+        allow(BookSerializer).to receive(:open_api_has_many_associations).and_return([class_has_many_association, string_has_many_association, has_many_association])
+      end
+
+      it "skips only the associations with warnings" do
+        expect { subject }.to output(/Skipped BookSerializer#logs: .* but got Log\..*Skipped BookSerializer#notes: .* but got Note\./m).to_stderr
+        expect(subject.schemas["Book"].properties.keys).to contain_exactly(:id, :published_at, :tags, :authors, :cover_image, :publisher)
+      end
+    end
+
+    context "when a has_many association is annotated with an empty array" do
+      let(:empty_array_has_many_association) { OpenApiAnnotator::Association.new("logs", [], true) }
+
+      before do
+        allow(BookSerializer).to receive(:open_api_has_many_associations).and_return([empty_array_has_many_association, has_many_association])
+      end
+
+      it "skips only the association with a warning" do
+        expect { subject }.to output(/Skipped BookSerializer#logs/).to_stderr
+        expect(subject.schemas["Book"].properties.keys).to contain_exactly(:id, :published_at, :tags, :authors, :cover_image, :publisher)
+      end
+    end
   end
 
 end

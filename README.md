@@ -1,4 +1,4 @@
-# OpenApiAnnotator [![Gem Version](https://badge.fury.io/rb/open_api_annotator.svg)](https://badge.fury.io/rb/open_api_annotator) [![Build Status](https://travis-ci.org/wantedly/open_api_annotator.svg?branch=master)](https://travis-ci.org/wantedly/open_api_annotator) [![Maintainability](https://api.codeclimate.com/v1/badges/8be7a273496459c62190/maintainability)](https://codeclimate.com/github/wantedly/open_api_annotator/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/8be7a273496459c62190/test_coverage)](https://codeclimate.com/github/wantedly/open_api_annotator/test_coverage)
+# OpenApiAnnotator [![Gem Version](https://badge.fury.io/rb/open_api_annotator.svg)](https://badge.fury.io/rb/open_api_annotator) [![Build Status](https://travis-ci.org/wantedly/open_api_annotator.svg?branch=master)](https://travis-ci.org/wantedly/open_api_annotator)
 
 OpenApiAnnotator realizes to generate OpenAPI spec by annotating to controllers and serializers.
 If you use ActiveModelSerializer, this is the best way to generate OpenAPI spec.

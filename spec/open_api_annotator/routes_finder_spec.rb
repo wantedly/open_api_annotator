@@ -12,7 +12,7 @@ RSpec.describe OpenApiAnnotator::RoutesFinder do
     let(:journey_route) { double(:journey_route) }
 
     before do
-      allow(path).to receive(:ast).and_return(double(:ast))
+      allow(path).to receive(:spec).and_return(double(:spec))
       allow(journey_route).to receive(:path).and_return(path)
       allow(journey_route).to receive(:verb).and_return("GET")
       allow(journey_route).to receive(:requirements).and_return({ controller: "/api/v1/books", action: "show" })
@@ -34,6 +34,51 @@ RSpec.describe OpenApiAnnotator::RoutesFinder do
           )
         ]
       )
+    end
+  end
+
+  describe "#find_all with routes drawn by Rails" do
+    subject { described_class.new.find_all }
+
+    let(:rails_application) { double(:rails_application) }
+    let(:route_set) do
+      ActionDispatch::Routing::RouteSet.new.tap do |route_set|
+        route_set.draw do
+          get "/api/v1/books/:book_id/authors/:id", to: "api/v1/authors#show"
+        end
+      end
+    end
+
+    before do
+      allow(Rails).to receive(:application).and_return(rails_application)
+      allow(rails_application).to receive(:routes).and_return(route_set)
+    end
+
+    # Rails 7.0+ wraps Pattern#ast in Journey::Ast and clears it on eager_load!, while Pattern#spec survives both
+    shared_examples "resolving path and parameters from the route" do
+      it "returns the route with its path and parameters" do
+        is_expected.to match(
+          [
+            OpenApiAnnotator::Route.new(
+              http_verb: "GET",
+              path: "/api/v1/books/{book_id}/authors/{id}",
+              controller_name: "api/v1/authors",
+              action_name: "show",
+              parameters: [{ name: "book_id" }, { name: "id" }]
+            )
+          ]
+        )
+      end
+    end
+
+    context "when routes are not eager loaded (as in rake tasks by default)" do
+      it_behaves_like "resolving path and parameters from the route"
+    end
+
+    context "when routes are eager loaded (e.g. with config.rake_eager_load = true)" do
+      before { route_set.eager_load! }
+
+      it_behaves_like "resolving path and parameters from the route"
     end
   end
 end
